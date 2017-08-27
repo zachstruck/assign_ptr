@@ -250,3 +250,56 @@ TEST_CASE("Allocate array through pointer output parameter")
         */
     }
 }
+
+// Caveat usage
+
+namespace
+{
+    bool foo_caveat(int*& p)
+    {
+        p = new int(42);
+
+        return true;
+    }
+}
+
+TEST_CASE("Caveat usage")
+{
+    std::unique_ptr<int> p;
+
+    // FIXME
+    SECTION("Unexpected branching")
+    {
+        if (foo_caveat(zpp::assign_ptr(p)) && p != nullptr)
+        {
+            // Expected branch, but unable to enter this branch
+            // because the destructor of zpp::assign_ptr(...) will not
+            // run until the end of the expression after the NULL pointer check
+            CHECK(false);
+        }
+        else
+        {
+            // Unexpected branch
+            CHECK(true);
+        }
+    }
+
+    SECTION("Workaround branching")
+    {
+        if (foo_caveat(zpp::assign_ptr(p)))
+        {
+            if (p != nullptr)
+            {
+                CHECK(p != nullptr);
+            }
+            else
+            {
+                CHECK(p == nullptr);
+            }
+        }
+        else
+        {
+            CHECK(p == nullptr);
+        }
+    }
+}
