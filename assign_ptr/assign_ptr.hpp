@@ -49,6 +49,16 @@ namespace zpp
                 return &p_;
             }
 
+            element_type*& by_ref() && noexcept
+            {
+                return p_;
+            }
+
+            element_type** by_ptr() && noexcept
+            {
+                return &p_;
+            }
+
         private:
             SmartPtr* pp_ = nullptr;
             element_type* p_ = nullptr;

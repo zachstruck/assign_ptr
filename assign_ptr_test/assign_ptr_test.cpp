@@ -251,6 +251,108 @@ TEST_CASE("Allocate array through pointer output parameter")
     }
 }
 
+// Overloaded ambiguity
+
+namespace
+{
+    void foo_ambig(int*& p)
+    {
+        p = new int(42);
+    }
+
+    void foo_ambig(int** p)
+    {
+        *p = new int(42);
+    }
+}
+
+TEST_CASE("Ambiguous function cannot use user-defined conversion")
+{
+    SECTION("Raw pointer")
+    {
+        int* p = nullptr;
+
+        SECTION("by ref")
+        {
+            foo_ambig(p);
+
+            REQUIRE(p != nullptr);
+            CHECK(*p == 42);
+
+            delete p;
+        }
+        SECTION("by ptr")
+        {
+            foo_ambig(&p);
+
+            REQUIRE(p != nullptr);
+            CHECK(*p == 42);
+
+            delete p;
+        }
+    }
+
+    SECTION("auto_ptr")
+    {
+        std::auto_ptr<int> p;
+
+        SECTION("by ref")
+        {
+            foo_ambig(zpp::assign_ptr(p).by_ref());
+
+            REQUIRE(p.get() != nullptr);
+            CHECK(*p == 42);
+        }
+        SECTION("by ptr")
+        {
+            foo_ambig(zpp::assign_ptr(p).by_ptr());
+
+            REQUIRE(p.get() != nullptr);
+            CHECK(*p == 42);
+        }
+    }
+
+    SECTION("unique_ptr")
+    {
+        std::unique_ptr<int> p;
+
+        SECTION("by ref")
+        {
+            foo_ambig(zpp::assign_ptr(p).by_ref());
+
+            REQUIRE(p.get() != nullptr);
+            CHECK(*p == 42);
+        }
+        SECTION("by ptr")
+        {
+            foo_ambig(zpp::assign_ptr(p).by_ptr());
+
+            REQUIRE(p.get() != nullptr);
+            CHECK(*p == 42);
+        }
+    }
+
+    SECTION("shared_ptr")
+    {
+        std::shared_ptr<int> p;
+
+        SECTION("by ref")
+        {
+            foo_ambig(zpp::assign_ptr(p).by_ref());
+
+            REQUIRE(p.get() != nullptr);
+            CHECK(*p == 42);
+        }
+        SECTION("by ptr")
+        {
+            foo_ambig(zpp::assign_ptr(p).by_ptr());
+
+            REQUIRE(p.get() != nullptr);
+            CHECK(*p == 42);
+        };
+    }
+}
+
 // Caveat usage
 
 namespace
