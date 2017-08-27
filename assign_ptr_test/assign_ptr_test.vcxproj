@@ -70,16 +70,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)externals;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)assign_ptr;$(SolutionDir)externals;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)externals;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)assign_ptr;$(SolutionDir)externals;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)externals;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)assign_ptr;$(SolutionDir)externals;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)externals;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)assign_ptr;$(SolutionDir)externals;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -132,6 +132,11 @@
   <ItemGroup>
     <ClCompile Include="assign_ptr_test.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\assign_ptr\assign_ptr.vcxproj">
+      <Project>{d18e9338-c161-4ae2-82af-6d7bb34078b0}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
