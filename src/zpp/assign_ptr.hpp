@@ -3,6 +3,16 @@
 
 #include <type_traits>
 
+#ifdef _MSC_VER
+#  if _MSC_VER >= 1910 && _MSVC_LANG >= 201703L
+#    define ZPP_COPY_ELISION 1
+#  else
+#    define ZPP_COPY_ELISION 0
+#  endif
+#else
+#  define ZPP_COPY_ELISION 0
+#endif
+
 namespace zpp
 {
     namespace detail
@@ -25,14 +35,14 @@ namespace zpp
             assign_ptr_impl(assign_ptr_impl const&) = delete;
             assign_ptr_impl& operator=(assign_ptr_impl const&) = delete;
 
-            // NOTE
-            // Ideally, no move semantics, but for now...
-            //
-            // TODO  C++17
-            // When guaranteed copy elision is implemented from P0135R1,
-            // delete the move constructor
-            assign_ptr_impl(assign_ptr_impl&&) = default;
+#if ZPP_COPY_ELISION
+            // No move semantics - use copy elision
+            assign_ptr_impl(assign_ptr_impl&&) = delete;
             assign_ptr_impl& operator=(assign_ptr_impl&&) = delete;
+#else
+            assign_ptr_impl(assign_ptr_impl&&) = default;
+            assign_ptr_impl& operator=(assign_ptr_impl&&) = default;
+#endif
 
             ~assign_ptr_impl()
             {
