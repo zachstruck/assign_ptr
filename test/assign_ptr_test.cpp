@@ -122,7 +122,7 @@ namespace
 
         p = new int[len];
 
-        for (std::size_t i = 0; i < len; ++i)
+        for (int i = 0; i < static_cast<int>(len); ++i)
         {
             p[i] = i;
         }
@@ -192,7 +192,7 @@ namespace
 
         *p = new int[len];
 
-        for (std::size_t i = 0; i < len; ++i)
+        for (int i = 0; i < static_cast<int>(len); ++i)
         {
             (*p)[i] = i;
         }
