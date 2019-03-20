@@ -6,6 +6,16 @@
 #include <memory>
 #include <new>
 
+#ifdef _MSC_VER
+#  if _MSC_VER >= 1910 && _MSVC_LANG >= 201703L
+#    define ZPP_HAS_AUTO_PTR 0
+#  else
+#    define ZPP_HAS_AUTO_PTR 1
+#  endif
+#else
+#  define ZPP_HAS_AUTO_PTR 0
+#endif
+
 // Single item
 
 // Reference to pointer
@@ -31,6 +41,7 @@ TEST_CASE("Allocate single item through reference output parameter")
         delete p;
     }
 
+#if ZPP_HAS_AUTO_PTR
     SECTION("auto_ptr")
     {
         std::auto_ptr<int> p;
@@ -39,6 +50,7 @@ TEST_CASE("Allocate single item through reference output parameter")
         REQUIRE(p.get() != nullptr);
         CHECK(*p == 42);
     }
+#endif
 
     SECTION("unique_ptr")
     {
@@ -82,6 +94,7 @@ TEST_CASE("Allocate single item through pointer output parameter")
         delete p;
     }
 
+#if ZPP_HAS_AUTO_PTR
     SECTION("auto_ptr")
     {
         std::auto_ptr<int> p;
@@ -90,6 +103,7 @@ TEST_CASE("Allocate single item through pointer output parameter")
         REQUIRE(p.get() != nullptr);
         CHECK(*p == 42);
     }
+#endif
 
     SECTION("unique_ptr")
     {
@@ -292,6 +306,7 @@ TEST_CASE("Ambiguous function cannot use user-defined conversion")
         }
     }
 
+#if ZPP_HAS_AUTO_PTR
     SECTION("auto_ptr")
     {
         std::auto_ptr<int> p;
@@ -311,6 +326,7 @@ TEST_CASE("Ambiguous function cannot use user-defined conversion")
             CHECK(*p == 42);
         }
     }
+#endif
 
     SECTION("unique_ptr")
     {
