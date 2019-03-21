@@ -3,15 +3,28 @@ image: Visual Studio 2017
 install:
 - vcpkg install catch2
 
+configuration:
+- Debug
+- Release
+
 before_build:
 - mkdir build
 
 build_script:
-- cmake . -Bbuild -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE="C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake" -DBUILD_TESTING:BOOL=ON
-- cmake --build build
+- >
+  cmake .
+  -Bbuild
+  -G "Visual Studio 15 2017"
+  -DBUILD_TESTING:BOOL=ON
+  -DCMAKE_BUILD_TYPE:STRING=%configuration%
+  -DCMAKE_TOOLCHAIN_FILE="C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake"
+- >
+  cmake
+  --build build
+  --config %configuration%
 
 test_script:
 - cd build
-- ctest -C Debug
+- ctest -C %configuration%
 
 cache: C:/tools/vcpkg/installed/
