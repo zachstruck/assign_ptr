@@ -1,0 +1,15 @@
+image: Visual Studio 2017
+
+install:
+- vcpkg install catch2
+
+before_build:
+- mkdir build
+
+build_script:
+- cmake . -Bbuild -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE="C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake" -DBUILD_TESTING:BOOL=ON
+- cmake --build build
+
+test_script:
+- cd build
+- ctest -C Debug
