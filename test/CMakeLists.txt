@@ -11,4 +11,8 @@ if(BUILD_TESTING)
             Catch2::Catch2
             libassign_ptr
     )
+
+    include(CTest)
+    include(Catch)
+    catch_discover_tests(tests)
 endif(BUILD_TESTING)
