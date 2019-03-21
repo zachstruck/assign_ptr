@@ -7,6 +7,11 @@ configuration:
 - Debug
 - Release
 
+environment:
+  matrix:
+  - VS_TYPE: Visual Studio 14 2015
+  - VS_TYPE: Visual Studio 15 2017
+
 before_build:
 - mkdir build
 
@@ -14,7 +19,7 @@ build_script:
 - >
   cmake .
   -Bbuild
-  -G "Visual Studio 15 2017"
+  -G "%VS_TYPE%"
   -DBUILD_TESTING:BOOL=ON
   -DCMAKE_BUILD_TYPE:STRING=%configuration%
   -DCMAKE_TOOLCHAIN_FILE="C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake"
