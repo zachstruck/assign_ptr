@@ -13,3 +13,5 @@ build_script:
 test_script:
 - cd build
 - ctest -C Debug
+
+cache: C:/tools/vcpkg/installed/
