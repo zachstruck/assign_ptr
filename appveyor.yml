@@ -1,11 +1,16 @@
 image: Visual Studio 2017
 
 install:
-- vcpkg install catch2
+- vcpkg install catch2:x86-windows
+- vcpkg install catch2:x64-windows
 
 configuration:
 - Debug
 - Release
+
+platform:
+- Win32
+- x64
 
 environment:
   matrix:
@@ -20,6 +25,7 @@ build_script:
   cmake .
   -Bbuild
   -G "%VS_TYPE%"
+  -A %platform%
   -DBUILD_TESTING:BOOL=ON
   -DCMAKE_BUILD_TYPE:STRING=%configuration%
   -DCMAKE_TOOLCHAIN_FILE="C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake"
