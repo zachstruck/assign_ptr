@@ -1,0 +1,11 @@
+dist: xenial
+
+language: cpp
+
+compiler:
+  - clang
+  - gcc
+
+script:
+  - mkdir build
+  - cmake . -Bbuild
