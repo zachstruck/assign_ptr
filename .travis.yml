@@ -18,3 +18,10 @@ script:
     cmake .
     -Bbuild
     -DBUILD_TESTING:BOOL=ON
+    -DCMAKE_BUILD_TYPE:STRING=Debug
+  - >
+    cmake
+    --build build
+    --config Debug
+  - cd build
+  - ctest -C Debug
