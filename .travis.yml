@@ -19,6 +19,7 @@ script:
     -Bbuild
     -DBUILD_TESTING:BOOL=ON
     -DCMAKE_BUILD_TYPE:STRING=Debug
+    -DCMAKE_CXX_STANDARD=14
   - >
     cmake
     --build build
