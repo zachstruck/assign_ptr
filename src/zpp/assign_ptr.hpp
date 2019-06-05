@@ -3,14 +3,51 @@
 
 #include <type_traits>
 
+#define ZPP_TARGET_COMPILER(X) ZPP_TARGET_COMPILER_PRIV_DEF_##X()
 #ifdef _MSC_VER
-#  if _MSC_VER >= 1910 && _MSVC_LANG >= 201703L
-#    define ZPP_COPY_ELISION 1
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_MSVC() 1
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_CLANG() 0
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_GCC() 0
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_UNKNOWN() 0
+#elif __clang__
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_MSVC() 0
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_CLANG() 1
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_GCC() 0
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_UNKNOWN() 0
+#elif __GNUC__
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_MSVC() 0
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_CLANG() 0
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_GCC() 1
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_UNKNOWN() 0
+#else
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_MSVC() 0
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_CLANG() 0
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_GCC() 0
+#  define ZPP_TARGET_COMPILER_PRIV_DEF_UNKNOWN() 1
+#endif
+
+#define ZPP_CXX17(X) ZPP_CXX17_PRIV_DEF_##X()
+
+#if ZPP_TARGET_COMPILER(MSVC)
+#  if _MSC_VER >= 1913 && _MSVC_LANG >= 201703L
+#    define ZPP_CXX17_PRIV_DEF_COPY_ELISION() 1
 #  else
-#    define ZPP_COPY_ELISION 0
+#    define ZPP_CXX17_PRIV_DEF_COPY_ELISION() 0
+#  endif
+#elif ZPP_TARGET_COMPILER(CLANG)
+#  if __clang_major__ >= 4 && __cplusplus >= 201703L
+#    define ZPP_CXX17_PRIV_DEF_COPY_ELISION() 1
+#  else
+#    define ZPP_CXX17_PRIV_DEF_COPY_ELISION() 0
+#  endif
+#elif ZPP_TARGET_COMPILER(GCC)
+#  if __GNUC__  >= 7 && __cplusplus >= 201703L
+#    define ZPP_CXX17_PRIV_DEF_COPY_ELISION() 1
+#  else
+#    define ZPP_CXX17_PRIV_DEF_COPY_ELISION() 0
 #  endif
 #else
-#  define ZPP_COPY_ELISION 0
+#  define ZPP_COPY_ELISION() 0
 #endif
 
 namespace zpp
@@ -35,7 +72,7 @@ namespace zpp
             assign_ptr_impl(assign_ptr_impl const&) = delete;
             assign_ptr_impl& operator=(assign_ptr_impl const&) = delete;
 
-#if ZPP_COPY_ELISION
+#if ZPP_CXX17(COPY_ELISION)
             // No move semantics - use copy elision
             assign_ptr_impl(assign_ptr_impl&&) = delete;
             assign_ptr_impl& operator=(assign_ptr_impl&&) = delete;
