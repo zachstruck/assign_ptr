@@ -6,14 +6,26 @@
 #include <memory>
 #include <new>
 
-#ifdef _MSC_VER
-#  if _MSC_VER >= 1910 && _MSVC_LANG >= 201703L
-#    define ZPP_HAS_AUTO_PTR 0
+#if ZPP_TARGET_COMPILER(CLANG)
+#  if __cplusplus >= 201703L
+#    define ZPP_CXX03_PRIV_DEF_AUTO_PTR() 0
 #  else
-#    define ZPP_HAS_AUTO_PTR 1
+#    define ZPP_CXX03_PRIV_DEF_AUTO_PTR() 1
 #  endif
-#else
-#  define ZPP_HAS_AUTO_PTR 0
+#elif ZPP_TARGET_COMPILER(GCC)
+#  if __cplusplus >= 201703L
+#    define ZPP_CXX03_PRIV_DEF_AUTO_PTR() 0
+#  else
+#    define ZPP_CXX03_PRIV_DEF_AUTO_PTR() 1
+#  endif
+#elif ZPP_TARGET_COMPILER(MSVC)
+#  if _MSC_VER >= 1910 && _MSVC_LANG >= 201703L
+#    define ZPP_CXX03_PRIV_DEF_AUTO_PTR() 0
+#  else
+#    define ZPP_CXX03_PRIV_DEF_AUTO_PTR() 1
+#  endif
+#elif ZPP_TARGET_COMPILER(UNKNOWN)
+#  define ZPP_CXX03_PRIV_DEF_AUTO_PTR() 0
 #endif
 
 // Single item
@@ -41,7 +53,7 @@ TEST_CASE("Allocate single item through reference output parameter")
         delete p;
     }
 
-#if ZPP_HAS_AUTO_PTR
+#if ZPP_CXX03(AUTO_PTR)
     SECTION("auto_ptr")
     {
         std::auto_ptr<int> p;
