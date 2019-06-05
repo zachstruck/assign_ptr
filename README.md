@@ -60,7 +60,7 @@ if (foo_alloc(p) && p != nullptr)
 delete p;
 ```
 
-is not equivalent to
+is _not_ equivalent to
 
 ```c++
 std::unique_ptr<int> p;
@@ -98,6 +98,4 @@ if (foo_alloc(zpp::assign); p != nullptr)
 
 ### Compiler support ###
 
-Tested with Visual Studio 2017 15.3.
-
-C++14 (but this could be lowered to C++03 by conditionally removing some safety).
+C++11 (but backporting to C++03 is possible)
