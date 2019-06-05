@@ -58,7 +58,7 @@ namespace zpp
         class assign_ptr_impl
         {
         public:
-            using element_type = std::remove_extent_t<typename SmartPtr::element_type>;
+            using element_type = typename std::remove_extent<typename SmartPtr::element_type>::type;
 
             // No default construction
             assign_ptr_impl() = delete;
