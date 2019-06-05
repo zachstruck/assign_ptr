@@ -28,6 +28,24 @@
 #  define ZPP_CXX03_PRIV_DEF_AUTO_PTR() 0
 #endif
 
+#if ZPP_TARGET_COMPILER(CLANG)
+#  define ZPP_CXX17_PRIV_DEF_SHARED_PTR_ARRAY() 0
+#elif ZPP_TARGET_COMPILER(GCC)
+#  if __GNUC__ >= 7 && __cplusplus >= 201703L
+#    define ZPP_CXX17_PRIV_DEF_SHARED_PTR_ARRAY() 1
+#  else
+#    define ZPP_CXX17_PRIV_DEF_SHARED_PTR_ARRAY() 0
+#  endif
+#elif ZPP_TARGET_COMPILER(MSVC)
+#  if _MSC_VER >= 1912 && _MSVC_LANG >= 201703L
+#    define ZPP_CXX17_PRIV_DEF_SHARED_PTR_ARRAY() 1
+#  else
+#    define ZPP_CXX17_PRIV_DEF_SHARED_PTR_ARRAY() 0
+#  endif
+#elif ZPP_TARGET_COMPILER(UNKNOWN)
+#  define ZPP_CXX17_PRIV_DEF_SHARED_PTR_ARRAY() 0
+#endif
+
 // Single item
 
 // Reference to pointer
@@ -106,7 +124,7 @@ TEST_CASE("Allocate single item through pointer output parameter")
         delete p;
     }
 
-#if ZPP_HAS_AUTO_PTR
+#if ZPP_CXX03(AUTO_PTR)
     SECTION("auto_ptr")
     {
         std::auto_ptr<int> p;
@@ -190,11 +208,9 @@ TEST_CASE("Allocate array through reference output parameter")
         CHECK(p[2] == 2);
     }
 
+#if ZPP_CXX17(SHARED_PTR_ARRAY)
     SECTION("shared_ptr")
     {
-        // TODO  C++17
-        // std::shared_ptr does not yet support arrays
-        /*
         std::shared_ptr<int[]> p;
         std::size_t len = 0;
         foo_ref_array(zpp::assign_ptr(p), len);
@@ -204,8 +220,8 @@ TEST_CASE("Allocate array through reference output parameter")
         CHECK(p[0] == 0);
         CHECK(p[1] == 1);
         CHECK(p[2] == 2);
-        */
     }
+#endif
 }
 
 // Pointer to pointer
@@ -260,10 +276,9 @@ TEST_CASE("Allocate array through pointer output parameter")
         CHECK(p[2] == 2);
     }
 
+#if ZPP_CXX17(SHARED_PTR_ARRAY)
     SECTION("shared_ptr")
     {
-        // TODO  C++17
-        /*
         std::shared_ptr<int[]> p;
         std::size_t len = 0;
         foo_ptr_array(zpp::assign_ptr(p), len);
@@ -273,8 +288,8 @@ TEST_CASE("Allocate array through pointer output parameter")
         CHECK(p[0] == 0);
         CHECK(p[1] == 1);
         CHECK(p[2] == 2);
-        */
     }
+#endif
 }
 
 // Overloaded ambiguity
@@ -318,7 +333,7 @@ TEST_CASE("Ambiguous function cannot use user-defined conversion")
         }
     }
 
-#if ZPP_HAS_AUTO_PTR
+#if ZPP_CXX03(AUTO_PTR)
     SECTION("auto_ptr")
     {
         std::auto_ptr<int> p;
