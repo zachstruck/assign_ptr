@@ -64,6 +64,13 @@ jobs:
       - build_parameterized:
           compiler: "clang++"
           cxx: "14"
+  build_clang_17:
+    docker:
+      - image: "debian:sid"
+    steps:
+      - build_parameterized:
+          compiler: "clang++"
+          cxx: "17"
   build_gcc_14:
     docker:
       - image: "debian:sid"
@@ -84,5 +91,6 @@ workflows:
   build_all:
     jobs:
       - build_clang_14
+      - build_clang_17
       - build_gcc_14
       - build_gcc_17
