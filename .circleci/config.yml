@@ -1,9 +1,13 @@
 version: 2.1
 
-jobs:
-  build:
-    docker:
-      - image: "debian:sid"
+commands:
+  build_parameterized:
+    parameters:
+      cxx:
+        default: "14"
+        description: The C++ standard version.
+        type: enum
+        enum: ["03", "11", "14", "17"]
     steps:
       - checkout
       - run:
@@ -26,7 +30,7 @@ jobs:
               -Bbuild
               -DBUILD_TESTING:BOOL=ON
               -DCMAKE_BUILD_TYPE:STRING=Debug
-              -DCMAKE_CXX_STANDARD=14
+              -DCMAKE_CXX_STANDARD=<< parameters.cxx >>
       - run:
           name: Build code
           command: >
@@ -38,3 +42,11 @@ jobs:
           command: |
             cd build
             ctest -C Debug
+
+jobs:
+  build:
+    docker:
+      - image: "debian:sid"
+    steps:
+      - build_parameterized:
+          cxx: "14"
