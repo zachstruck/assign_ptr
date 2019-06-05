@@ -44,9 +44,23 @@ commands:
             ctest -C Debug
 
 jobs:
-  build:
+  build_gcc_14:
     docker:
       - image: "debian:sid"
     steps:
       - build_parameterized:
           cxx: "14"
+  build_gcc_17:
+    docker:
+      - image: "debian:sid"
+    steps:
+      - build_parameterized:
+          cxx: "17"
+
+workflows:
+  version: 2
+  build_all:
+    jobs:
+      - build_gcc_14
+      - build_gcc_17
+
