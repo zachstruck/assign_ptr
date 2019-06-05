@@ -7,14 +7,34 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Updating apt
+          name: Update apt
           command: 'apt update'
       - run:
-          name: Installing build tools
-          command: 'apt install -y g++ cmake'
+          name: Install build tools
+          command: 'apt install -y g++ cmake git'
       - run:
-          name: Creating build files
-          command: 'cmake -H. -Bbuild'
+          name: Install dependencies
+          command: |
+            git clone https://github.com/catchorg/Catch2.git
+            cmake -BCatch2/build -HCatch2 -DBUILD_TESTING=OFF
+            cmake --build Catch2/build/ --target install
       - run:
-          name: Building code
-          command: 'cmake --build build'
+          name: Create build files
+          command: >
+              cmake
+              -H.
+              -Bbuild
+              -DBUILD_TESTING:BOOL=ON
+              -DCMAKE_BUILD_TYPE:STRING=Debug
+              -DCMAKE_CXX_STANDARD=14
+      - run:
+          name: Build code
+          command: >
+              cmake
+              --build build
+              --config Debug
+      - run:
+          name: Run tests
+          command: |
+            cd build
+            ctest -C Debug
