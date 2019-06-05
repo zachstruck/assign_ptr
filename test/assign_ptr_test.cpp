@@ -46,6 +46,28 @@
 #  define ZPP_CXX17_PRIV_DEF_SHARED_PTR_ARRAY() 0
 #endif
 
+#if ZPP_TARGET_COMPILER(CLANG)
+#  if (__clang_major__ >= 4 || __clang_major__ == 3 && __clang_minor__ >= 9) && __cplusplus >= 201703L
+#    define ZPP_CXX17_PRIV_DEF_INIT_IF() 1
+#  else
+#    define ZPP_CXX17_PRIV_DEF_INIT_IF() 0
+#  endif
+#elif ZPP_TARGET_COMPILER(GCC)
+#  if __GNUC__ >= 7 && __cplusplus >= 201703L
+#    define ZPP_CXX17_PRIV_DEF_INIT_IF() 1
+#  else
+#    define ZPP_CXX17_PRIV_DEF_INIT_IF() 0
+#  endif
+#elif ZPP_TARGET_COMPILER(MSVC)
+#  if _MSC_VER >= 1911 && _MSVC_LANG >= 201703L
+#    define ZPP_CXX17_PRIV_DEF_INIT_IF() 1
+#  else
+#    define ZPP_CXX17_PRIV_DEF_INIT_IF() 0
+#  endif
+#elif ZPP_TARGET_COMPILER(UNKNOWN)
+#  define ZPP_CXX17_PRIV_DEF_INIT_IF() 0
+#endif
+
 // Single item
 
 // Reference to pointer
@@ -447,4 +469,18 @@ TEST_CASE("Caveat usage")
             CHECK(p == nullptr);
         }
     }
+
+#if ZPP_CXX17(INIT_IF)
+    SECTION("C++17 if-statement initialization")
+    {
+        if (foo_caveat(zpp::assign_ptr(p)); p != nullptr)
+        {
+            CHECK(p != nullptr);
+        }
+        else
+        {
+            CHECK(p == nullptr);
+        }
+    }
+#endif
 }

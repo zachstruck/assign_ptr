@@ -47,6 +47,40 @@ foo_alloc(zpp::assign_ptr(p));
 
 Done.
 
+## Caveat
+
+There is one unintuitive edge case to be aware of.
+
+```c++
+int* p = nullptr;
+if (foo_alloc(p) && p != nullptr)
+{
+    // Do something with `p`
+}
+delete p;
+```
+
+is not equivalent to
+
+```c++
+std::unique_ptr<int> p;
+if (foo_alloc(zpp::assign_ptr(p)) && p != nullptr)
+{
+    // Impossible to enter this branch
+    // because `p` has not yet been set
+}
+```
+
+C++17 offers a solution via if-statement initialization.
+
+```c++
+std::unique_ptr<int> p;
+if (foo_alloc(zpp::assign); p != nullptr)
+{
+    // Do something with `p`
+}
+```
+
 ## Supported smart pointers ##
 
 ### Defined requirements ###
