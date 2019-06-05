@@ -64,7 +64,7 @@ namespace zpp
             using element_type = typename std::remove_extent<typename SmartPtr::element_type>::type;
 
             // No default construction
-            assign_ptr_impl() = delete;
+            assign_ptr_impl() noexcept = delete;
 
             explicit assign_ptr_impl(SmartPtr& p) noexcept :
                 pp_(&p)
@@ -77,11 +77,11 @@ namespace zpp
 
 #if ZPP_CXX17(COPY_ELISION)
             // No move semantics - use copy elision
-            assign_ptr_impl(assign_ptr_impl&&) = delete;
-            assign_ptr_impl& operator=(assign_ptr_impl&&) = delete;
+            assign_ptr_impl(assign_ptr_impl&&) noexcept = delete;
+            assign_ptr_impl& operator=(assign_ptr_impl&&) noexcept = delete;
 #else
-            assign_ptr_impl(assign_ptr_impl&&) = default;
-            assign_ptr_impl& operator=(assign_ptr_impl&&) = default;
+            assign_ptr_impl(assign_ptr_impl&&) noexcept = default;
+            assign_ptr_impl& operator=(assign_ptr_impl&&) noexcept = default;
 #endif
 
             ~assign_ptr_impl()
@@ -116,7 +116,7 @@ namespace zpp
     }
 
     template <typename SmartPtr>
-    detail::assign_ptr_impl<SmartPtr> assign_ptr(SmartPtr& p)
+    detail::assign_ptr_impl<SmartPtr> assign_ptr(SmartPtr& p) noexcept
     {
         return detail::assign_ptr_impl<SmartPtr>(p);
     }
