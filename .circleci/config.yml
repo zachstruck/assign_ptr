@@ -25,8 +25,13 @@ commands:
           name: Install dependencies
           command: |
             git clone https://github.com/catchorg/Catch2.git
-            cmake -BCatch2/build -HCatch2 -DBUILD_TESTING=OFF
-            cmake --build Catch2/build/ --target install
+            cmake \
+              -HCatch2 \
+              -BCatch2/build \
+              -DBUILD_TESTING=OFF
+            cmake \
+              --build Catch2/build/ \
+              --target install
       - run:
           name: Create build files
           command: >
