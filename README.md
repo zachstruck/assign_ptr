@@ -1,11 +1,11 @@
-assign_ptr
-==========
+# assign_ptr
+
 [![CircleCI](https://circleci.com/gh/zachstruck/assign_ptr.svg?style=svg)](https://circleci.com/gh/zachstruck/assign_ptr)
 ![AppVeyor CI Build Status](https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true)
 
 `assign_ptr` is a utility for interfacing C++ smart pointers with C-style APIs that allocate resources through output parameters.
 
-## Illustration of the problem ##
+## Illustration of the problem
 
 ```c++
 // Allocates memory to output parameter 'p' via 'new'
@@ -15,7 +15,7 @@ void foo_alloc(int*& p);
 
 How to move the allocated raw pointer into a smart pointer for safety?
 
-### Temporary raw pointer ###
+### Temporary raw pointer
 
 ```c++
 int* p_ = nullptr;
@@ -25,7 +25,7 @@ std::unique_ptr<int> p(p_);
 
 Doable, but pollutes the scope with a temporary variable.
 
-### Temporary raw pointer with limited scope ###
+### Temporary raw pointer with limited scope
 
 ```c++
 std::unique_ptr<int> p;
@@ -38,7 +38,7 @@ std::unique_ptr<int> p;
 
 Requires more lines of boilerplate code.
 
-### `assign_ptr` utility function ###
+### `assign_ptr` utility function
 
 ```c++
 std::unique_ptr<int> p;
@@ -81,21 +81,21 @@ if (foo_alloc(zpp::assign); p != nullptr)
 }
 ```
 
-## Supported smart pointers ##
+## Supported smart pointers
 
-### Defined requirements ###
+### Defined requirements
 
 `assign_ptr` should work with any class/struct that defines the following:
 
 * `element_type` type
 * `reset(element_type*)` member function
 
-### Tested smart pointers ###
+### Tested smart pointers
 
 * std::unique_ptr
 * std::shared_ptr
 * std::auto_ptr
 
-### Compiler support ###
+### Compiler support
 
 C++11 (but backporting to C++03 is possible)
