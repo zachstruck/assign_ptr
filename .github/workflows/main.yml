@@ -19,8 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        compiler: [ clang++ ]
-        cxx: [ 17 ]
+        compiler: [ clang++, g++ ]
+        cxx: [ 03, 11, 14, 17 ]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
