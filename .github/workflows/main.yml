@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         compiler: [ clang++, g++ ]
-        cxx: [ 03, 11, 14, 17 ]
+        cxx: [ 98, 11, 14, 17 ]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
