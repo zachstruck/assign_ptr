@@ -1,8 +1,5 @@
 # assign_ptr
 
-[![CircleCI](https://circleci.com/gh/zachstruck/assign_ptr.svg?style=svg)](https://circleci.com/gh/zachstruck/assign_ptr)
-![AppVeyor CI Build Status](https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true)
-
 `assign_ptr` is a utility for interfacing C++ smart pointers with C-style APIs that allocate resources through output parameters.
 
 ## Illustration of the problem
